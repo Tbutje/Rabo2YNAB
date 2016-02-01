@@ -5,38 +5,17 @@ Created on 1 feb. 2016
 '''
 
 import csv, sys
-from Raboreader.CLRabo2Ynab import CLRabo2Ynab
+from Raboreader.Rabo2Ynab import Rabo2Ynab
 
 if __name__ == '__main__':
     filename_in = 'C:/Users/Timo/Documents/LiClipse Workspace/Raboreader/resource/transactions.csv'
-    date        = []; 
-    payee       = [];
-    category    = [];
-    memo        = [];
-    outflow     = [];
-    inflow      = [];
+    dir_out = 'C:/Users/Timo/Documents/LiClipse Workspace/Raboreader/output/'
 
-    Converter = CLRabo2Ynab( )
-    
-    Converter.read( filename_in )
+    Converter = Rabo2Ynab(filename_in, dir_out  )
+    Converter.read()
     Converter.convert( )
-#     Converter.write( )
+    Converter.write( )
     
-    
-    try:
-        with open(filename_in) as file_in:
-                
-            reader = csv.reader(file_in)
-    #             Skip first line
-            next(reader, None)
-            for row in reader:
-                date.append(row[2])
-    except IOError:
-        sys.exit(
-                    "input file error",
-                    "input file not found\nplease check the input file name"
-                )
-        
     print('succes')
             
     
