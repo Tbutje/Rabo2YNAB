@@ -29,7 +29,7 @@ class Rabo2Ynab(object):
                 next(reader, None)
                 for row in reader:
                     rowReader = RowReader( row )
-#                   add acount?
+#                   add acount when not existing yet, otherwise get index
                     if not row[0] in self.accounts:
                         self.tData.append([])
                         self.accounts.append(row[0])
