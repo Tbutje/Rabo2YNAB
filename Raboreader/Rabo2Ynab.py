@@ -10,14 +10,10 @@ class Rabo2Ynab(object):
     '''
     classdocs
     '''
-    file_in = 'init'
-    dir_out = 'init'
-    date        = []
-    payee       = []
-    category    = []
-    memo        = []
-    outflow     = []
-    inflow      = []
+    file_in     = 'init'
+    dir_out     = 'init'
+    accounts    = []
+    tData       = []   
 
 
     def __init__(self, file_in, dir_out):
@@ -33,12 +29,22 @@ class Rabo2Ynab(object):
                 next(reader, None)
                 for row in reader:
                     rowReader = RowReader( row )
-                    self.date.append(rowReader.get_date())
-                    self.payee.append(rowReader.get_payee())     
-                    self.category.append(rowReader.get_category())
-                    self.memo.append(rowReader.get_memo())      
-                    self.outflow.append(rowReader.get_outflow())   
-                    self.inflow.append(rowReader.get_inflow())    
+#                   add acount?
+                    if not row[0] in self.accounts:
+                        self.tData.append([])
+                        self.accounts.append(row[0])
+                        account_idx = len(self.accounts) - 1
+                    else:
+                        account_idx = self.accounts.index(row[0])
+                        
+                    row_res = { 'date':     rowReader.get_date(),
+                               'payee':     rowReader.get_payee(), 
+                               'category':  rowReader.get_category(),
+                                'memo':     rowReader.get_memo(),
+                                'out':      rowReader.get_outflow(),
+                                'in':       rowReader.get_inflow() }
+                    self.tData[account_idx].append(row_res)
+                        
         except IOError:
             sys.exit(
                         "input file error",
@@ -46,9 +52,6 @@ class Rabo2Ynab(object):
                     )
             
     
-    def convert(self):
-        print(5)
-        
     def write(self):
         print(1)    
         

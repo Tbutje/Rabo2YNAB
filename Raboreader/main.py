@@ -1,10 +1,3 @@
-'''
-Created on 1 feb. 2016
-
-@author: Timo
-'''
-
-import csv, sys
 from Raboreader.Rabo2Ynab import Rabo2Ynab
 
 if __name__ == '__main__':
@@ -13,7 +6,6 @@ if __name__ == '__main__':
 
     Converter = Rabo2Ynab(filename_in, dir_out  )
     Converter.read()
-    Converter.convert( )
     Converter.write( )
     
     print('succes')
