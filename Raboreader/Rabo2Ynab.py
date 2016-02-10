@@ -1,8 +1,4 @@
-'''
-Created on 1 feb. 2016
 
-@author: Timo
-'''
 from Raboreader.RowReader import RowReader
 import csv, sys
 
@@ -10,40 +6,38 @@ class Rabo2Ynab(object):
     '''
     classdocs
     '''
-    file_in     = 'init'
-    dir_out     = 'init'
-    accounts    = []
-    tData       = []   
+    mv_file_in = 'init'
+    mv_dir_out = 'init'
+    mt_accounts = []
+    mt_data = []   
 
 
     def __init__(self, file_in, dir_out):
-        self.file_in = file_in
-        self.dir_out = dir_out
+        self.mv_file_in = file_in
+        self.mv_dir_out = dir_out
         
     def read(self):
         try:
-            with open(self.file_in) as File:
+            with open(self.mv_file_in) as File:
                 
-                reader = csv.reader(File)
-    #             Skip first line
-                next(reader, None)
-                for row in reader:
-                    rowReader = RowReader( row )
+                lr_reader = csv.reader(File)
+                for ls_row in lr_reader:
+                    lr_rowReader = RowReader(ls_row)
 #                   add acount when not existing yet, otherwise get index
-                    if not row[0] in self.accounts:
-                        self.tData.append([])
-                        self.accounts.append(row[0])
-                        account_idx = len(self.accounts) - 1
+                    if not ls_row[0] in self.mt_accounts:
+                        self.mt_data.append([])
+                        self.mt_accounts.append(ls_row[0])
+                        lv_account_idx = len(self.mt_accounts) - 1
                     else:
-                        account_idx = self.accounts.index(row[0])
+                        lv_account_idx = self.mt_accounts.index(ls_row[0])
                         
-                    row_res = { 'date':     rowReader.get_date(),
-                               'payee':     rowReader.get_payee(), 
-                               'category':  rowReader.get_category(),
-                                'memo':     rowReader.get_memo(),
-                                'out':      rowReader.get_outflow(),
-                                'in':       rowReader.get_inflow() }
-                    self.tData[account_idx].append(row_res)
+                    ls_data = { 'date':     lr_rowReader.get_date(),
+                               'payee':     lr_rowReader.get_payee(),
+                               'category':  lr_rowReader.get_category(),
+                                'memo':     lr_rowReader.get_memo(),
+                                'out':      lr_rowReader.get_outflow(),
+                                'in':       lr_rowReader.get_inflow() }
+                    self.mt_data[lv_account_idx].append(ls_data)
                         
         except IOError:
             sys.exit(
@@ -53,7 +47,28 @@ class Rabo2Ynab(object):
             
     
     def write(self):
-        print(1)    
+        ls_data = {}
+        for idx, lv_account in enumerate(self.mt_accounts):
+            if self.mv_dir_out.find('\\') > 0:
+                lv_filename = self.mv_dir_out + '\\' + lv_account + '.csv'
+            else:
+                lv_filename = self.mv_dir_out + lv_account + '.csv'
+            with open(lv_filename, 'w+', newline='') as lr_file:
+                lr_writer = csv.writer(lr_file, quoting=csv.QUOTE_NONNUMERIC, quotechar='"')
+                
+#           write header row
+                lr_writer.writerow([ 'Date' , 'Payee' , 'Category' , \
+                                  'Memo' , 'Outflow' , 'Inflow' ])
+            
+#           write the rest
+                for jdx, ls_data in enumerate(self.mt_data[idx]):
+                    lr_writer.writerow([ls_data.get('date'), \
+                                        ls_data.get('payee'), \
+                                        ls_data.get('category'), \
+                                        ls_data.get('memo'), \
+                                        ls_data.get('out'), \
+                                        ls_data.get('in')])
+            
         
  
         
