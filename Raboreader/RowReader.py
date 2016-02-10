@@ -2,15 +2,15 @@
 class RowReader(object):
 
     ms_row = []
-    coCrediteurenBetaling = 'cb'
-    coDiverseBoekingen = 'db'
-    coGeldAutomaat = 'ga'
-    coBetaalAutomaat = 'ba'
-    coBetaalContactLoos = 'bc'
-    coBankGiro = 'bg'
-    coEuroIncasso = 'ei'
-    coIdeal = 'id'
-    coEigenRek = 'tb'
+    coCrediteurenBetaling   = 'cb'
+    coDiverseBoekingen      = 'db'
+    coGeldAutomaat          = 'ga'
+    coBetaalAutomaat        = 'ba'
+    coBetaalContactLoos     = 'bc'
+    coBankGiro              = 'bg'
+    coEuroIncasso           = 'ei'
+    coIdeal                 = 'id'
+    coEigenRek              = 'tb'
 
     def __init__(self, row):
         self.ms_row = row
@@ -22,19 +22,20 @@ class RowReader(object):
         return lv_day + '/' + lv_month + '/' + lv_year
     def get_payee(self):
         lv_pay_type = self.ms_row[8]
-        if (self.ms_row[8] == self.coGeldAutomaat
-        or   self.ms_row[8] == self.coBetaalAutomaat
-        or   lv_pay_type == self.coBetaalContactLoos) :
+        
+        if ( lv_pay_type == self.coGeldAutomaat
+        or   lv_pay_type == self.coBetaalAutomaat
+        or   lv_pay_type == self.coBetaalContactLoos):
             return self.ms_row[10]  
         
-        elif (lv_pay_type == self.coBankGiro
+        elif (  lv_pay_type == self.coBankGiro
              or lv_pay_type == self.coCrediteurenBetaling
              or lv_pay_type == self.coEuroIncasso
              or lv_pay_type == self.coIdeal
              or lv_pay_type == self.coEigenRek):
             return self.ms_row[5] + " - " + self.ms_row[6]
         
-        elif self.ms_row[8] == self.coDiverseBoekingen :
+        elif lv_pay_type == self.coDiverseBoekingen:
             return self.ms_row[6] + ' - ' + self.ms_row[10]
 
         else:
